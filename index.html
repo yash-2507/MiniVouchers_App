@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    #wallet {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    #main {
+      display: grid;
+      grid-template-columns: repeat(3,33%);
+      grid-gap: 20px;
+      padding: 50px;
+    }
+    #main > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #buy {
+      width: 70%;
+      height: 30px;
+      margin: 5px;
+      background-color: rgb(243, 225, 225);
+      border: none;
+      color: teal;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #navigation {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+    #navigation div {
+      border-radius: 10px;
+      /* padding: 20px; */
+    }
+    a {
+      /* margin: 10px; */
+      text-decoration: none;
+      font-size: 25px;
+      font-weight: bold;
+    }
+    a:hover {
+      background-color: rgb(128, 245, 245);
+      color: black;
+    }
+
+  </style>
+
+  <body>
+    <div id="navigation">
+      <div>
+        <a href="./addtowallet.html">Add Money</a>
+      </div>
+      <div>
+        <a href="./purchases.html">Purchases</a>
+      </div>
+    </div>
+    <div>
+      <h3 id="wallet">
+        <!--SHOW CURRENT WALLET VALUE HERE, ONLY THE NUMBER SHOULD BE VISIBLE-->
+      </h3>
+    </div>
+
+    <div id="main">
+      <!--SHOW ALL THE VOUCEHRS DATA FROM API HERE( IMAGE, NAME AND PRICE)-->
+    </div>
+  </body>
+</html>
+
+<script type="module">
+  //WRITE YOUR LOGIC HERE
+  const mainDiv = document.getElementById('main')
+  const url = 'https://masai-vouchers-api.herokuapp.com/api/vouchers'
+  const showWallet = document.getElementById('wallet')
+  
+  // Show Wallet Amount
+  let myWallet = JSON.parse(localStorage.getItem('wallet'))
+  // console.log(myWallet)
+  let walletAmount = document.createElement('h3')
+  walletAmount.innerText = myWallet
+  showWallet.append(walletAmount)
+  
+  // Fetch & Append Data
+  
+  const getData = async (url) => {
+    try {
+      let res = await fetch(url);
+      let data = await res.json();
+      // console.log(data[0].vouchers);
+      const myData = data[0].vouchers
+      append(myData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  getData(url);
+  let voucher = []
+  
+  const append = (data) => {
+    data.forEach(elem => {
+      let name = elem.name;
+      let price = elem.price;
+      let image = elem.image;
+
+      let dataObj = {
+        name: name,
+        price: price,
+        image: image,
+      }
+
+      let dataImg = document.createElement('img')
+      dataImg.src = image;
+      let dataName = document.createElement('h3')
+      dataName.innerText = name;
+      let dataPrice = document.createElement('h4')
+      dataPrice.innerText = price;
+      let buyButton = document.createElement('button')
+      buyButton.innerText = "Buy"
+      buyButton.setAttribute('id','buy')
+      buyButton.addEventListener('click',(event) => {
+        let clickedItem = event.target.parentElement;
+        let voucherPrice = price
+        if(price > walletAmount.innerText) {
+          alert('You are running low on Budgets!, Kindly add some Money.')
+        }
+        else {
+          // console.log(walletAmount.innerText - priceReduction)
+          let updatedAmount = walletAmount.innerText - voucherPrice
+          update(updatedAmount)
+
+          let voucherName = name
+          let voucherImg = image
+
+          let selectedVoucher = {
+            name: voucherName,
+            price: voucherPrice,
+            image: voucherImg,
+          }
+          voucher.push(selectedVoucher)
+          // console.log(voucher)
+          localStorage.setItem('purchases',JSON.stringify(voucher))
+        }
+      })
+      let parent = document.createElement('div')
+      parent.append(dataImg,dataName,dataPrice,buyButton)
+      mainDiv.append(parent)
+      // console.log(dataObj)
+    })
+  }
+  
+
+  const update = (amount) => {
+    // let walletAmount = document.createElement('h3')
+    walletAmount.innerText = amount
+    showWallet.append(walletAmount)
+    localStorage.setItem('wallet',JSON.stringify(walletAmount.innerText))
+  }
+  
+</script>

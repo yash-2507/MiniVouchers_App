@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    #navigation {
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-around;
+    }
+    #navigation div {
+      border-radius: 10px;
+      /* padding: 20px; */
+    }
+    a {
+      /* margin: 10px; */
+      text-decoration: none;
+      font-size: 25px;
+      font-weight: bold;
+    }
+    a:hover {
+      background-color: rgb(128, 245, 245);
+      color: black;
+    }
+  </style>
+  <body>
+    <div id="navigation">
+      <div>
+        <a href="./index.html">Buy Vouchers</a>
+      </div>
+      <div>
+        <a href="./purchases.html">Purchases</a>
+      </div>
+    </div>
+    <h1>Add amount</h1>
+
+    <div>
+      <!--DO NOT MAKE ANY CHANGES HERE, ONLY WRITE LOGIC IN SCRIPT TAG-->
+      <input type="number" id="amount" />
+      <button onclick="addtoWallet()">Add to Wallet</button>
+    </div>
+  </body>
+</html>
+
+<script>
+  //write logic here
+  const addtoWallet = ()  => {
+    let myAmount = localStorage.getItem('wallet') || 0
+    let inputAmount = document.getElementById('amount')
+    let input = Number(inputAmount.value)
+    myAmount = +myAmount
+    myAmount += input
+    localStorage.setItem('wallet',myAmount)
+  }
+</script>

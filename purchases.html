@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    #purchases {
+      display: grid;
+      grid-template-columns: repeat(3,33%);
+      grid-gap: 20px;
+      padding: 50px;
+    }
+    #purchases > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+
+  <body>
+    <div id="purchases">
+      <!--SHOW ALL YOUR PURCHASES HERE-->
+    </div>
+  </body>
+</html>
+
+<script>
+  //WRITE YOUR LOGIC HERE
+  const mainDiv = document.getElementById('purchases')
+  let purchasedVouchers = JSON.parse(localStorage.getItem('purchases'))
+  purchasedVouchers.forEach(elem => {
+    let name = elem.name;
+      let price = elem.price;
+      let image = elem.image;
+
+      let dataObj = {
+        name: name,
+        price: price,
+        image: image,
+      }
+
+      let dataImg = document.createElement('img')
+      dataImg.src = image;
+      let dataName = document.createElement('h3')
+      dataName.innerText = name;
+      let dataPrice = document.createElement('h4')
+      dataPrice.innerText = price;
+      
+      let parent = document.createElement('div')
+      parent.append(dataImg,dataName,dataPrice)
+      mainDiv.append(parent)
+      // console.log(dataObj)
+  })
+</script>
